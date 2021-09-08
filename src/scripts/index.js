@@ -1,3 +1,4 @@
+// create container
 const container = document.createElement('div');
 container.classList.add('container');
 
@@ -8,14 +9,14 @@ const containerTitle = document.createElement('h3');
 containerTitle.innerHTML = 'Тендеры в роли Поставщика';
 
 const showSelectedButton = document.createElement('button');
-showSelectedButton.innerHTML = 'Показать выбранное (0)';
 showSelectedButton.classList.add('show-selected', 'visually-hidden');
+showSelectedButton.innerHTML = 'Показать выбранное (0)';
 
 const search = document.createElement('input');
 search.classList.add('container__search');
 search.setAttribute('placeholder', 'Код ОКРБ или наименование закупаемой продукции');
 
-//select
+//create select block
 const select = document.createElement('div');
 select.classList.add('select');
 
@@ -23,17 +24,18 @@ containerHeader.append(containerTitle, showSelectedButton);
 container.append(containerHeader, search, select);
 document.body.append(container);
 
-//modal
+//create modal in select block
 const modal = document.createElement('div');
 modal.classList.add('modal');
 
 const modalNav = document.createElement('div');
 modalNav.classList.add('modal__header');
 
-const arrow = document.createElement('button');
+const arrowWrapper = document.createElement('button');
+arrowWrapper.classList.add('arrow-wrapper');
+const arrow = document.createElement('div');
 arrow.classList.add('arrow');
-const div = document.createElement('div');
-arrow.append(div);
+arrowWrapper.append(arrow);
 
 const modalTitle = document.createElement('h3');
 modalTitle.innerHTML = 'Реализуемые товары';
@@ -46,7 +48,7 @@ const inputTop = document.createElement('input');
 inputTop.classList.add('container__search');
 inputTop.setAttribute('placeholder', 'Поиск');
 
-modalNav.append(arrow, modalTitle, chosen);
+modalNav.append(arrowWrapper, modalTitle, chosen);
 modal.append(modalNav, inputTop);
 select.append(modal);
 
@@ -72,7 +74,7 @@ for (let counter = 0; counter < optionsValue.length; counter++) {
     select.append(item);
 }
 
-// footer in select
+// create footer in select block
 const selectFooter = document.createElement('div');
 selectFooter.classList.add('select__footer');
 
@@ -98,29 +100,17 @@ options.forEach(option => {
 
 let labels = document.querySelectorAll('label');
 
-const isActive = (activeCheckList) => {
-
-    labels.forEach(label => {
-        activeCheckList.forEach(checkbox => {
-            if (label.id === checkbox.id) {
-                label.style.backgroundColor = '#ebf2f4';
-            }
-        });
-    });
-};
-
 const hasChecked = () => {
     let activeCheckList = document.querySelectorAll('input[type="checkbox"]:checked');
 
-    isActive(activeCheckList);
     chosen.innerHTML = `Выбранное (${activeCheckList.length})`;
 
     if (`${activeCheckList.length}` > 0) {
         containerTitle.innerHTML = 'Тендеры в роли Заказчика';
-        showSelectedButton.classList.remove('show-selected', 'visually-hidden');
+        showSelectedButton.classList.remove('visually-hidden');
     } else {
         containerTitle.innerHTML = 'Тендеры в роли Поставщика';
-        showSelectedButton.classList.add('show-selected', 'visually-hidden');
+        showSelectedButton.classList.add('visually-hidden');
     }
 };
 
@@ -135,29 +125,26 @@ const hide = () => {
 
 search.onclick = show;
 showSelectedButton.onclick = show;
-arrow.onclick = hide;
-
-const toInput = (checkList) => {
-    let values = [];
-    checkList.forEach(item => {
-        values.push(item.value);
-    });
-
-    search.setAttribute('placeholder', 'Ковры и ковровые изделия');
-};
+arrowWrapper.onclick = hide;
 
 const checkCount = () => {
     let checkList = document.querySelectorAll('input[type="checkbox"]:checked');
     showSelectedButton.innerHTML = `Показать выбранное (${checkList.length})`;
 
+    if(`${checkList.length}` == 0) {
+        search.setAttribute('placeholder', 'Код ОКРБ или наименование закупаемой продукции');
+    } else {
+        search.setAttribute('placeholder', 'Ковры и ковровые изделия');
+    }
+
     hide();
-    toInput(checkList);
 };
 
 apply.onclick = checkCount;
 
 const notChecked = () => {
     const checkList = document.querySelectorAll('input[type="checkbox"]');
+    search.setAttribute('placeholder', 'Код ОКРБ или наименование закупаемой продукции');
     checkList.forEach((item => {
         item.checked = false;
     }));
